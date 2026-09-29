@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KDPK - Kewaspadaan Dini & Pencegahan Konflik</title>
+<style>
+  :root{
+    --primary:#0e7c66;
+    --primary-dark:#0a5c48;
+    --primary-light:#e3f7f1;
+    --secondary:#f97316;
+    --secondary-dark:#ea580c;
+    --blue:#2563eb;
+    --purple:#7c3aed;
+    --bg:#f6f9f8;
+    --card:#ffffff;
+    --text:#1f2a2e;
+    --muted:#61706d;
+    --border:#dde8e4;
+    --green:#16a34a;
+    --green-bg:#e8f8ee;
+    --red:#dc2626;
+    --red-bg:#fdecec;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:"Segoe UI", Arial, Helvetica, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none;}
+
+  /* ---------- TOP BAR ---------- */
+  header.topbar{
+    position:sticky;top:0;z-index:100;
+    background:#ffffff;
+    border-bottom:3px solid var(--primary);
+    display:flex;align-items:center;justify-content:space-between;
+    padding:12px 24px;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .brand{display:flex;align-items:baseline;gap:10px;cursor:pointer;}
+  .brand-title{font-size:22px;font-weight:800;color:var(--primary);letter-spacing:0.5px;}
+  .brand-sub{font-size:13px;color:var(--muted);border-left:1px solid var(--border);padding-left:10px;}
+
+  nav.menu{display:flex;align-items:center;gap:4px;flex-wrap:wrap;}
+  .menu-item{position:relative;}
+  .menu-btn{
+    background:none;border:none;cursor:pointer;
+    font-size:13px;font-weight:700;letter-spacing:0.3px;
+    color:var(--primary-dark);padding:10px 12px;border-radius:6px;
+    font-family:inherit;
+  }
+  .menu-btn:hover, .menu-btn.active{background:var(--primary-light);}
+  .caret{font-size:10px;margin-left:4px;color:var(--muted);}
+  .dropdown{
+    display:none;position:absolute;top:calc(100% + 4px);left:0;
+    background:#fff;border:1px solid var(--border);border-radius:8px;
+    box-shadow:0 10px 24px rgba(14,124,102,0.14);
+    min-width:290px;padding:6px;z-index:200;
+  }
+  .dropdown.open{display:block;}
+  .dropdown a{
+    display:block;padding:9px 12px;font-size:13.5px;color:var(--text);
+    border-radius:6px;
+  }
+  .dropdown a:hover{background:var(--primary-light);color:var(--primary-dark);}
+
+  /* ---------- LAYOUT ---------- */
+  main{max-width:960px;margin:0 auto;padding:32px 20px 80px;}
+  .page{display:none;}
+  .page.active{display:block;}
+
+  /* ---------- BERANDA ---------- */
+  .hero{
+    text-align:center;padding:40px 16px 26px;border-radius:16px;margin-bottom:32px;
+    background:linear-gradient(135deg,#e3f7f1 0%, #eaf2ff 100%);
+    border:1px solid var(--border);
+  }
+  .hero h1{font-size:27px;color:var(--primary-dark);margin:8px 0 2px;}
+  .hero .tagline{font-size:18px;font-weight:700;color:var(--secondary-dark);margin:8px 0;}
+  .hero p.desc{max-width:620px;margin:10px auto 22px;color:var(--muted);font-size:14.5px;}
+  .btn{
+    display:inline-block;background:var(--primary);color:#fff;
+    padding:12px 24px;border-radius:8px;font-size:14px;font-weight:700;
+    border:none;cursor:pointer;font-family:inherit;
+    box-shadow:0 4px 10px rgba(14,124,102,0.25);
+  }
+  .btn:hover{background:var(--primary-dark);}
+  .btn.secondary{background:#fff;color:var(--primary);border:2px solid var(--primary);box-shadow:none;}
+  .btn.secondary:hover{background:var(--primary-light);}
+  .btn.orange{background:var(--secondary);box-shadow:0 4px 10px rgba(249,115,22,0.30);}
+  .btn.orange:hover{background:var(--secondary-dark);}
+
+  .card-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:10px;}
+  @media(max-width:900px){.card-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:560px){.card-grid{grid-template-columns:1fr;}}
+  .material-card{
+    background:var(--card);border:1px solid var(--border);border-radius:12px;
+    padding:20px;cursor:pointer;transition:transform .15s, box-shadow .15s;
+    border-top:5px solid var(--c, var(--primary));
+  }
+  .material-card:hover{transform:translateY(-3px);box-shadow:0 10px 22px rgba(14,124,102,0.14);}
+  .material-card .num{
+    display:inline-block;width:30px;height:30px;line-height:30px;text-align:center;
+    background:var(--c, var(--primary));color:#fff;border-radius:50%;font-size:14px;font-weight:800;margin-bottom:10px;
+  }
+  .material-card h3{margin:4px 0 6px;font-size:16.5px;color:var(--text);}
+  .material-card p{margin:0;font-size:13.5px;color:var(--muted);}
+
+  /* ---------- MATERI PAGES ---------- */
+  .page-title{font-size:25px;color:var(--primary-dark);margin:0 0 4px;display:inline-block;}
+  .page-title-wrap{border-bottom:4px solid var(--secondary);display:inline-block;padding-bottom:8px;margin-bottom:22px;}
+  .breadcrumb{font-size:12.5px;color:var(--muted);margin-bottom:6px;}
+  .section-block{margin:30px 0;}
+  .section-block h3{font-size:17px;color:var(--primary-dark);margin-bottom:8px;border-left:5px solid var(--secondary);padding-left:10px;}
+  .section-block p{font-size:14.5px;color:var(--text);}
+  .simple-note{background:var(--primary-light);border:1px solid #bfe6da;border-radius:8px;padding:12px 14px;font-size:14px;margin:12px 0;}
+  ul.plain{padding-left:20px;font-size:14.5px;}
+  ul.plain li{margin-bottom:5px;}
+
+  .list-block{border:1px solid var(--border);border-left:4px solid var(--blue);border-radius:8px;padding:14px 16px;margin:10px 0;background:#fff;}
+  .list-block h4{margin:0 0 4px;font-size:14.5px;color:var(--text);}
+  .list-block p{margin:0;font-size:13.5px;color:var(--muted);}
+
+  /* ---------- TOPIC QUICK-NAV (klik untuk lompat ke sub materi) ---------- */
+  .topic-cards{display:flex;flex-direction:column;gap:10px;margin:18px 0 28px;}
+  .topic-card{
+    display:flex;align-items:center;gap:12px;
+    text-align:left;background:#fff;border:2px solid var(--border);border-radius:12px;
+    padding:14px 16px;cursor:pointer;font-family:inherit;transition:all .15s;
+    border-left:5px solid var(--c, var(--primary));width:100%;
+  }
+  .topic-card:hover{transform:translateX(2px);box-shadow:0 6px 14px rgba(0,0,0,0.07);}
+  .topic-card.active{background:var(--primary-light);border-color:var(--c, var(--primary));}
+  .topic-card .tc-num{
+    flex:none;
+    display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;
+    background:var(--c, var(--primary));color:#fff;border-radius:50%;font-size:13px;font-weight:800;
+  }
+  .topic-card .tc-text{flex:1;}
+  .topic-card h4{margin:0 0 2px;font-size:14.5px;color:var(--text);}
+  .topic-card p{margin:0;font-size:12.5px;color:var(--muted);}
+  .topic-card.active h4{color:var(--primary-dark);}
+
+  /* sub materi tersembunyi sampai tombolnya diklik; hanya muncul di bawah daftar tombol, tetap di halaman yang sama */
+  .topic-panels{display:flex;flex-direction:column;gap:20px;margin-bottom:6px;}
+  .topic-panel{
+    display:none;
+    background:#fff;border:1px solid var(--border);border-radius:12px;
+    padding:22px 22px 8px;scroll-margin-top:90px;
+  }
+  .topic-panel.active{display:block;animation:fadein .2s ease;}
+  .topic-panel h3{font-size:18px;color:var(--primary-dark);margin-top:0;}
+  @keyframes fadein{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+
+  /* accordion */
+  .accordion{border:1px solid var(--border);border-radius:8px;margin:8px 0;overflow:hidden;background:#fff;}
+  .accordion-toggle{
+    width:100%;text-align:left;background:#fff;border:none;padding:13px 16px;
+    font-size:14.5px;font-weight:700;color:var(--text);cursor:pointer;
+    display:flex;justify-content:space-between;align-items:center;font-family:inherit;
+  }
+  .accordion-toggle:hover{background:#f6fbf9;}
+  .accordion-toggle .plus{font-size:16px;color:var(--secondary);font-weight:800;}
+  .accordion-content{display:none;padding:0 16px 16px;font-size:14px;color:var(--text);border-top:1px solid var(--border);}
+  .accordion-content.open{display:block;padding-top:12px;}
+  .accordion.expanded{border-color:var(--primary);}
+  .accordion.expanded .accordion-toggle{background:var(--primary-light);}
+  .accordion-content ul{margin:8px 0 0;padding-left:20px;}
+
+  .subgroup{margin:16px 0;}
+  .subgroup h4{font-size:14.5px;color:var(--primary-dark);margin-bottom:6px;}
+
+  .kuis-block{background:#fff8ee;border:1px solid #ffe3bd;border-radius:12px;padding:20px;scroll-margin-top:90px;}
+  .kuis-block h3{border-left-color:var(--secondary);}
+
+  #pk-langkah{scroll-margin-top:90px;}
+
+  .nav-buttons{display:flex;justify-content:space-between;margin-top:30px;border-top:1px solid var(--border);padding-top:20px;}
+  .nav-buttons .spacer{flex:1;}
+
+  /* ---------- KUIS SINGKAT WIDGET ---------- */
+  .mini-quiz .case{font-size:14px;margin-bottom:12px;}
+  .mini-quiz .question{font-weight:700;margin-bottom:12px;font-size:14.5px;color:var(--text);}
+  .mq-option{
+    display:block;width:100%;text-align:left;padding:10px 14px;margin-bottom:8px;
+    border:1px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;
+    font-size:14px;font-family:inherit;color:var(--text);
+  }
+  .mq-option:hover{border-color:var(--secondary);}
+  .mq-option.correct{background:var(--green-bg);border-color:var(--green);color:var(--green);font-weight:700;}
+  .mq-option.wrong{background:var(--red-bg);border-color:var(--red);color:var(--red);font-weight:700;}
+  .mq-feedback{margin-top:12px;padding:12px 14px;border-radius:8px;font-size:13.5px;display:none;}
+  .mq-feedback.show{display:block;}
+  .mq-feedback.ok{background:var(--green-bg);color:#155e29;border:1px solid var(--green);}
+  .mq-feedback.no{background:var(--red-bg);color:#8e1c1c;border:1px solid var(--red);}
+
+  /* ---------- KUIS UTAMA ---------- */
+  .quiz-box{max-width:640px;margin:0 auto;}
+  #kuisIntro{text-align:center;padding:24px;background:linear-gradient(135deg,#e3f7f1,#eaf2ff);border-radius:14px;}
+  #kuisIntro input{
+    width:100%;max-width:320px;padding:11px 14px;font-size:15px;border:2px solid var(--border);
+    border-radius:8px;margin:16px 0;font-family:inherit;
+  }
+  .progress-bar{height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin-bottom:6px;}
+  .progress-bar-fill{height:100%;background:var(--secondary);width:0%;transition:width .2s;}
+  .progress-label{font-size:12.5px;color:var(--muted);margin-bottom:18px;}
+  .q-text{font-size:16px;font-weight:700;color:var(--text);margin-bottom:16px;}
+  .q-option{
+    display:block;width:100%;text-align:left;padding:12px 16px;margin-bottom:10px;
+    border:2px solid var(--border);border-radius:10px;background:#fff;cursor:pointer;
+    font-size:14.5px;font-family:inherit;color:var(--text);
+  }
+  .q-option:hover{border-color:var(--secondary);}
+  .q-option.correct{background:var(--green-bg);border-color:var(--green);color:#155e29;font-weight:700;}
+  .q-option.wrong{background:var(--red-bg);border-color:var(--red);color:#8e1c1c;font-weight:700;}
+  .q-option[disabled]{cursor:default;}
+  .q-feedback{margin-top:14px;padding:14px 16px;border-radius:10px;font-size:13.5px;display:none;}
+  .q-feedback.show{display:block;}
+  .q-feedback.ok{background:var(--green-bg);border:1px solid var(--green);color:#155e29;}
+  .q-feedback.no{background:var(--red-bg);border:1px solid var(--red);color:#8e1c1c;}
+  .q-feedback .correct-answer{font-weight:800;margin-bottom:4px;}
+  .quiz-controls{margin-top:18px;text-align:right;}
+
+  .score-card{text-align:center;background:linear-gradient(135deg,#e3f7f1,#eaf2ff);border:1px solid var(--border);border-radius:14px;padding:30px 20px;margin-bottom:26px;}
+  .score-card .score-num{font-size:46px;font-weight:800;color:var(--primary);}
+  .score-card .score-label{color:var(--muted);font-size:14px;}
+  .review-item{border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px;background:#fff;}
+  .review-item .rq{font-size:13.5px;font-weight:700;margin-bottom:8px;color:var(--text);}
+  .review-item .ra{font-size:13px;margin:2px 0;}
+  .review-item .ra.correct{color:var(--green);}
+  .review-item .ra.wrong{color:var(--red);}
+  .review-item .rf{font-size:12.5px;color:var(--muted);margin-top:6px;border-top:1px dashed var(--border);padding-top:6px;}
+  .result-buttons{display:flex;gap:12px;justify-content:center;margin:24px 0 8px;flex-wrap:wrap;}
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    text-align:center;font-size:12.5px;color:var(--muted);
+    padding:22px 16px;border-top:1px solid var(--border);background:#fff;
+  }
+
+  @media(max-width:640px){
+    header.topbar{padding:10px 14px;}
+    .brand-sub{display:none;}
+    nav.menu{gap:0;}
+    .menu-btn{padding:8px 8px;font-size:12px;}
+    .dropdown{min-width:230px;left:auto;right:0;}
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand" onclick="showPage('beranda')">
+    <span class="brand-title">KDPK</span>
+    <span class="brand-sub">Kewaspadaan Dini &amp; Pencegahan Konflik</span>
+  </div>
+  <nav class="menu" id="mainMenu">
+    <div class="menu-item">
+      <button class="menu-btn" onclick="showPage('beranda')">BERANDA</button>
+    </div>
+    <div class="menu-item">
+      <button class="menu-btn" data-menu="m1" onclick="toggleDropdown('m1')">KEWASPADAAN DINI <span class="caret">&#9662;</span></button>
+      <div class="dropdown" id="dd-m1">
+        <a onclick="goTo('kewaspadaan','kd-apaitu')">Apa Itu Kewaspadaan Dini?</a>
+        <a onclick="goTo('kewaspadaan','kd-mengapa')">Mengapa Kewaspadaan Dini Penting?</a>
+        <a onclick="goTo('kewaspadaan','kd-apasaja')">Apa Saja yang Perlu Diwaspadai?</a>
+        <a onclick="goTo('kewaspadaan','kd-kuis')">Kuis singkat</a>
+      </div>
+    </div>
+    <div class="menu-item">
+      <button class="menu-btn" data-menu="m2" onclick="toggleDropdown('m2')">KONFLIK SOSIAL <span class="caret">&#9662;</span></button>
+      <div class="dropdown" id="dd-m2">
+        <a onclick="goTo('konflik','ks-apaitu')">Apa itu konflik sosial?</a>
+        <a onclick="goTo('konflik','ks-mengapa')">Mengapa Konflik Sosial dapat Terjadi?</a>
+        <a onclick="goTo('konflik','ks-bentuk')">Apa Saja Bentuk-Bentuk Konflik Sosial?</a>
+        <a onclick="goTo('konflik','ks-dampak')">Bagaimana Dampak Konflik Sosial terhadap Kehidupan Masyarakat?</a>
+        <a onclick="goTo('konflik','ks-kuis')">Kuis singkat</a>
+      </div>
+    </div>
+    <div class="menu-item">
+      <button class="menu-btn" data-menu="m3" onclick="toggleDropdown('m3')">PENCEGAHAN KONFLIK SOSIAL <span class="caret">&#9662;</span></button>
+      <div class="dropdown" id="dd-m3">
+        <a onclick="goTo('pencegahan','pk-apaitu')">Apa Itu Pencegahan Konflik Sosial?</a>
+        <a onclick="goTo('pencegahan','pk-mengapa')">Mengapa Konflik Perlu Dicegah?</a>
+        <a onclick="goTo('pencegahan','pk-upaya')">Bagaimana Upaya Pencegahan Konflik Sosial?</a>
+        <a onclick="goTo('pencegahan','pk-peran')">Bagaimana Peran Masyarakat dalam Mencegah Konflik?</a>
+        <a onclick="goTo('pencegahan','pk-langkah')">Jika Konflik Muncul, Apa yang Harus Dilakukan?</a>
+        <a onclick="goTo('pencegahan','pk-kuis')">Kuis singkat</a>
+      </div>
+    </div>
+    <div class="menu-item">
+      <button class="menu-btn" onclick="showPage('kuis')">KUIS</button>
+    </div>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ================= BERANDA ================= -->
+  <section id="beranda" class="page active">
+    <div class="hero">
+      <h1>KEWASPADAAN DINI &amp; PENCEGAHAN KONFLIK</h1>
+      <p class="tagline">"Kenali Potensi, Cegah Konflik, Jaga Kerukunan"</p>
+      <p class="desc">Website ini menyediakan informasi mengenai kewaspadaan dini, konflik sosial, serta langkah-langkah yang dapat dilakukan untuk membantu mencegah terjadinya konflik sosial.</p>
+      <button class="btn orange" onclick="showPage('kewaspadaan')">Mulai Pelajari Materi</button>
+    </div>
+
+    <div class="card-grid">
+      <div class="material-card" style="--c:#0e7c66" onclick="showPage('kewaspadaan')">
+        <span class="num">1</span>
+        <h3>Kewaspadaan Dini</h3>
+        <p>Mengenal kondisi dan potensi masalah sejak awal.</p>
+      </div>
+      <div class="material-card" style="--c:#2563eb" onclick="showPage('konflik')">
+        <span class="num">2</span>
+        <h3>Konflik Sosial</h3>
+        <p>Memahami pengertian, bentuk, faktor penyebab, dan dampaknya.</p>
+      </div>
+      <div class="material-card" style="--c:#f97316" onclick="showPage('pencegahan')">
+        <span class="num">3</span>
+        <h3>Pencegahan Konflik Sosial</h3>
+        <p>Memahami langkah yang dapat dilakukan untuk mencegah konflik berkembang.</p>
+      </div>
+      <div class="material-card" style="--c:#7c3aed" onclick="showPage('kuis')">
+        <span class="num">4</span>
+        <h3>Kuis</h3>
+        <p>Uji pemahaman melalui 20 pertanyaan.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= KEWASPADAAN DINI ================= -->
+  <section id="kewaspadaan" class="page">
+    <div class="breadcrumb">Beranda / Kewaspadaan Dini</div>
+    <div class="page-title-wrap"><h1 class="page-title">Kewaspadaan Dini</h1></div>
+    <p style="color:var(--muted);font-size:14px;margin-top:-8px;">Klik salah satu sub materi di bawah untuk menampilkan isinya. Materi akan muncul di bawah daftar tombol ini, tanpa berpindah halaman.</p>
+
+    <div class="topic-cards">
+      <button class="topic-card" style="--c:#0e7c66" data-panel="kd-apaitu" onclick="selectTopic(this,'kd-apaitu')">
+        <span class="tc-num">1</span>
+        <span class="tc-text"><h4>Apa Itu Kewaspadaan Dini?</h4><p>Pengertian dasar kewaspadaan dini.</p></span>
+      </button>
+      <button class="topic-card" style="--c:#2563eb" data-panel="kd-mengapa" onclick="selectTopic(this,'kd-mengapa')">
+        <span class="tc-num">2</span>
+        <span class="tc-text"><h4>Mengapa Kewaspadaan Dini Penting?</h4><p>Manfaat menerapkan kewaspadaan dini.</p></span>
+      </button>
+      <button class="topic-card" style="--c:#f97316" data-panel="kd-apasaja" onclick="selectTopic(this,'kd-apasaja')">
+        <span class="tc-num">3</span>
+        <span class="tc-text"><h4>Apa Saja yang Perlu Diwaspadai?</h4><p>Kondisi yang perlu diperhatikan di lingkungan.</p></span>
+      </button>
+    </div>
+
+    <div class="topic-panels">
+      <div class="topic-panel" id="kd-apaitu">
+        <h3>1. Apa Itu Kewaspadaan Dini?</h3>
+        <p>Kewaspadaan dini adalah sikap dan upaya untuk mengenali serta memahami berbagai potensi masalah yang dapat mengganggu keamanan, ketenteraman, dan kehidupan masyarakat sejak awal.</p>
+        <p>Kewaspadaan dini dilakukan dengan memperhatikan perubahan atau kejadian di lingkungan sekitar, mengenali tanda-tanda yang berpotensi menimbulkan masalah, serta menyampaikan informasi kepada pihak yang tepat apabila ditemukan kondisi yang perlu mendapat perhatian.</p>
+        <div class="simple-note"><strong>Sederhananya:</strong> Kewaspadaan dini berarti peka terhadap kondisi sekitar, mengenali potensi masalah sejak awal, dan bertindak secara tepat sebelum masalah berkembang menjadi konflik.</div>
+      </div>
+
+      <div class="topic-panel" id="kd-mengapa">
+        <h3>2. Mengapa Kewaspadaan Dini Penting?</h3>
+        <p>Setiap lingkungan masyarakat memiliki berbagai kondisi dan dinamika yang dapat berubah dari waktu ke waktu. Jika suatu permasalahan tidak dikenali sejak awal, masalah tersebut dapat berkembang dan menimbulkan gangguan yang lebih luas.</p>
+        <p>Kewaspadaan dini membantu masyarakat untuk:</p>
+        <ul class="plain">
+          <li>Mengenali potensi permasalahan di lingkungan</li>
+          <li>Meningkatkan kepedulian terhadap kondisi sekitar</li>
+          <li>Mencegah kesalahpahaman berkembang menjadi konflik</li>
+          <li>Mendorong penyelesaian masalah secara damai</li>
+          <li>Membangun komunikasi dan kerja sama antarmasyarakat</li>
+          <li>Menciptakan lingkungan yang aman, tertib, dan harmonis</li>
+        </ul>
+      </div>
+
+      <div class="topic-panel" id="kd-apasaja">
+        <h3>3. Apa Saja yang Perlu Diwaspadai?</h3>
+        <p>Kewaspadaan dini tidak berarti mencurigai setiap kejadian. Masyarakat perlu memperhatikan kondisi secara objektif dan tidak langsung mengambil kesimpulan. Beberapa kondisi yang perlu mendapat perhatian antara lain:</p>
+
+        <div class="accordion">
+          <button class="accordion-toggle" onclick="toggleAccordion(this)">a. Perselisihan di Lingkungan <span class="plus">+</span></button>
+          <div class="accordion-content">
+            <p>Perselisihan antarwarga, kelompok, atau komunitas yang terus berulang dapat menjadi tanda adanya permasalahan yang perlu diselesaikan.</p>
+            <p><strong>Contoh:</strong></p>
+            <ul><li>Pertengkaran antarwarga</li><li>Perselisihan karena masalah lingkungan</li><li>Konflik antar kelompok masyarakat</li></ul>
+          </div>
+        </div>
+        <div class="accordion">
+          <button class="accordion-toggle" onclick="toggleAccordion(this)">b. Penyebaran Informasi yang Belum Terverifikasi <span class="plus">+</span></button>
+          <div class="accordion-content">
+            <p>Informasi yang belum diketahui kebenarannya dapat menimbulkan kesalahpahaman dan keresahan.</p>
+            <p><strong>Contoh:</strong></p>
+            <ul><li>Berita yang sumbernya tidak jelas</li><li>Pesan berantai yang mengajak masyarakat melakukan tindakan tertentu</li><li>Informasi yang memprovokasi kelompok tertentu</li></ul>
+          </div>
+        </div>
+        <div class="accordion">
+          <button class="accordion-toggle" onclick="toggleAccordion(this)">c. Ketegangan Antarkelompok <span class="plus">+</span></button>
+          <div class="accordion-content">
+            <p>Perbedaan pendapat merupakan hal yang wajar dalam masyarakat. Namun, ketegangan yang semakin meningkat dan disertai tindakan yang merugikan pihak lain perlu diperhatikan.</p>
+            <p><strong>Contoh:</strong></p>
+            <ul><li>Munculnya pertentangan antar kelompok</li><li>Saling menyebarkan tuduhan</li><li>Tindakan yang mengarah pada permusuhan</li></ul>
+          </div>
+        </div>
+        <div class="accordion">
+          <button class="accordion-toggle" onclick="toggleAccordion(this)">d. Gangguan Ketenteraman Lingkungan <span class="plus">+</span></button>
+          <div class="accordion-content">
+            <p>Perubahan kondisi lingkungan yang menimbulkan keresahan masyarakat juga perlu diperhatikan.</p>
+            <p><strong>Contoh:</strong></p>
+            <ul><li>Keributan yang berulang</li><li>Kegiatan yang menimbulkan keresahan</li><li>Tindakan yang mengganggu ketertiban umum</li></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-block kuis-block" id="kd-kuis">
+      <h3>Kuis Singkat</h3>
+      <div class="mini-quiz" id="mq-kd"></div>
+    </div>
+
+    <div class="nav-buttons">
+      <span class="spacer"></span>
+      <button class="btn" onclick="showPage('konflik')">Berikutnya &rarr;</button>
+    </div>
+  </section>
+
+  <!-- ================= KONFLIK SOSIAL ================= -->
+  <section id="konflik" class="page">
+    <div class="breadcrumb">Beranda / Konflik Sosial</div>
+    <div class="page-title-wrap"><h1 class="page-title">Konflik Sosial</h1></div>
+    <p style="color:var(--muted);font-size:14px;margin-top:-8px;">Klik salah satu sub materi di bawah untuk menampilkan isinya. Materi akan muncul di bawah daftar tombol ini, tanpa berpindah halaman.</p>
+
+    <div class="topic-cards">
+      <button class="topic-card" style="--c:#0e7c66" data-panel="ks-apaitu" onclick="selectTopic(this,'ks-apaitu')">
+        <span class="tc-num">1</span>
+        <span class="tc-text"><h4>Apa itu Konflik Sosial?</h4><p>Pengertian dan gambaran umum konflik sosial.</p></span>
+      </button>
+      <button class="topic-card" style="--c:#2563eb" data-panel="ks-mengapa" onclick="selectTopic(this,'ks-mengapa')">
+        <span class="tc-num">2</span>
+        <span class="tc-text"><h4>Mengapa Konflik Sosial dapat Terjadi?</h4><p>Faktor-faktor penyebab konflik sosial.</p></span>
+      </button>
+      <button class="topic-card" style="--c:#f97316" data-panel="ks-bentuk" onclick="selectTopic(this,'ks-bentuk')">
+        <span class="tc-num">3</span>
+        <span class="tc-text"><h4>Apa Saja Bentuk-Bentuk Konflik Sosial?</h4><p>Jenis konflik berdasarkan pihak yang terlibat.</p></span>
+      </button>
+      <button class="topic-card" style="--c:#7c3aed" data-panel="ks-dampak" onclick="selectTopic(this,'ks-dampak')">
+        <span class="tc-num">4</span>
+        <span class="tc-text"><h4>Dampak Konflik Sosial</h4><p>Pengaruh konflik pada kehidupan masyarakat.</p></span>
+      </button>
+    </div>
+
+    <div class="topic-panels">
+      <div class="topic-panel" id="ks-apaitu">
+        <h3>1. Apa Itu Konflik Sosial?</h3>
+        <p>Konflik sosial merupakan kondisi ketika terjadi pertentangan atau perselisihan antara individu maupun kelompok dalam kehidupan masyarakat yang dapat memengaruhi hubungan sosial.</p>
+        <p>Konflik tidak selalu muncul secara tiba-tiba. Dalam kondisi tertentu, konflik dapat berkembang dari kesalahpahaman atau permasalahan yang tidak diselesaikan dengan baik.</p>
+        <div class="simple-note"><strong>Sederhananya:</strong> Konflik sosial terjadi ketika perbedaan atau pertentangan antara pihak-pihak dalam masyarakat berkembang menjadi masalah yang mengganggu hubungan sosial.</div>
+      </div>
+
+      <div class="topic-panel" id="ks-mengapa">
+        <h3>2. Mengapa Konflik Sosial dapat Terjadi?</h3>
+        <p>Konflik sosial dapat disebabkan oleh berbagai faktor, di antaranya:</p>
+        <div class="list-block"><h4>a. Perbedaan Pendapat</h4><p>Setiap orang memiliki pemikiran dan cara pandang yang berbeda. Perbedaan tersebut dapat menimbulkan perselisihan apabila tidak disertai sikap saling menghargai.</p></div>
+        <div class="list-block"><h4>b. Perbedaan Kepentingan</h4><p>Pihak-pihak dalam masyarakat dapat memiliki tujuan atau kepentingan yang berbeda sehingga terjadi pertentangan.</p></div>
+        <div class="list-block"><h4>c. Perbedaan Nilai dan Pandangan</h4><p>Perbedaan nilai, kebiasaan, dan cara melihat suatu persoalan dapat menjadi sumber konflik apabila tidak dikelola dengan baik.</p></div>
+        <div class="list-block"><h4>d. Kesalahpahaman Informasi</h4><p>Informasi yang tidak lengkap atau tidak benar dapat menimbulkan kesalahpahaman dan memengaruhi hubungan antarpihak.</p></div>
+        <div class="list-block"><h4>e. Komunikasi yang Kurang Baik</h4><p>Komunikasi yang tidak terbuka dapat menyebabkan suatu masalah menjadi lebih sulit dipahami dan diselesaikan.</p></div>
+        <div class="list-block"><h4>f. Prasangka dan Provokasi</h4><p>Prasangka terhadap individu atau kelompok tertentu serta tindakan provokatif dapat meningkatkan ketegangan dan memperbesar konflik.</p></div>
+      </div>
+
+      <div class="topic-panel" id="ks-bentuk">
+        <h3>3. Apa Saja Bentuk-Bentuk Konflik Sosial?</h3>
+        <p>Konflik sosial dapat dibedakan berdasarkan pihak-pihak yang terlibat.</p>
+        <div class="accordion">
+          <button class="accordion-toggle" onclick="toggleAccordion(this)">a. Konflik Antarindividu <span class="plus">+</span></button>
+          <div class="accordion-content">
+            <p>Konflik yang terjadi antara satu individu dengan individu lainnya karena adanya perbedaan pendapat, kepentingan, atau kesalahpahaman.</p>
+            <p><strong>Contoh:</strong> Perselisihan antara dua warga akibat kesalahpahaman mengenai penggunaan fasilitas bersama.</p>
+          </div>
+        </div>
+        <div class="accordion">
+          <button class="accordion-toggle" onclick="toggleAccordion(this)">b. Konflik Individu dengan Kelompok <span class="plus">+</span></button>
+          <div class="accordion-content">
+            <p>Konflik yang terjadi ketika kepentingan atau tindakan seorang individu bertentangan dengan kepentingan suatu kelompok.</p>
+            <p><strong>Contoh:</strong> Seorang anggota kelompok tidak menyetujui keputusan yang telah disepakati bersama.</p>
+          </div>
+        </div>
+        <div class="accordion">
+          <button class="accordion-toggle" onclick="toggleAccordion(this)">c. Konflik Antarkelompok <span class="plus">+</span></button>
+          <div class="accordion-content">
+            <p>Konflik yang terjadi antara dua kelompok atau lebih karena adanya perbedaan kepentingan, tujuan, atau pandangan.</p>
+            <p><strong>Contoh:</strong> Perselisihan antara kelompok masyarakat mengenai suatu kegiatan di lingkungan.</p>
+          </div>
+        </div>
+        <div class="accordion">
+          <button class="accordion-toggle" onclick="toggleAccordion(this)">d. Konflik dalam Masyarakat <span class="plus">+</span></button>
+          <div class="accordion-content">
+            <p>Konflik yang melibatkan lebih banyak pihak dan dapat memengaruhi hubungan sosial serta ketenteraman lingkungan.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic-panel" id="ks-dampak">
+        <h3>4. Bagaimana Dampak Konflik Sosial terhadap Kehidupan Masyarakat?</h3>
+        <p>Konflik sosial dapat memberikan dampak terhadap berbagai aspek kehidupan masyarakat, antara lain:</p>
+        <div class="accordion">
+          <button class="accordion-toggle" onclick="toggleAccordion(this)">a. Dampak Sosial <span class="plus">+</span></button>
+          <div class="accordion-content"><p>Konflik dapat menyebabkan hubungan antarindividu atau kelompok menjadi renggang, berkurangnya rasa saling percaya, dan terganggunya kerja sama dalam masyarakat.</p></div>
+        </div>
+        <div class="accordion">
+          <button class="accordion-toggle" onclick="toggleAccordion(this)">b. Dampak Psikologis <span class="plus">+</span></button>
+          <div class="accordion-content"><p>Konflik yang berlangsung terus-menerus dapat menimbulkan rasa takut, cemas, tidak nyaman, atau tekanan bagi pihak yang terlibat maupun masyarakat di sekitarnya.</p></div>
+        </div>
+        <div class="accordion">
+          <button class="accordion-toggle" onclick="toggleAccordion(this)">c. Dampak terhadap Ketenteraman <span class="plus">+</span></button>
+          <div class="accordion-content"><p>Konflik yang semakin berkembang dapat mengganggu keamanan, ketertiban, dan kenyamanan lingkungan masyarakat.</p></div>
+        </div>
+        <div class="accordion">
+          <button class="accordion-toggle" onclick="toggleAccordion(this)">d. Dampak terhadap Aktivitas Masyarakat <span class="plus">+</span></button>
+          <div class="accordion-content"><p>Konflik yang meluas dapat menghambat berbagai aktivitas masyarakat, termasuk kegiatan sosial, pendidikan, maupun ekonomi.</p></div>
+        </div>
+        <div class="accordion">
+          <button class="accordion-toggle" onclick="toggleAccordion(this)">e. Dampak terhadap Persatuan <span class="plus">+</span></button>
+          <div class="accordion-content"><p>Konflik antarkelompok yang tidak diselesaikan dapat memperbesar perbedaan dan mengurangi rasa kebersamaan dalam masyarakat.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-block kuis-block" id="ks-kuis">
+      <h3>Kuis Singkat</h3>
+      <div class="mini-quiz" id="mq-ks"></div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn secondary" onclick="showPage('kewaspadaan')">&larr; Sebelumnya</button>
+      <span class="spacer"></span>
+      <button class="btn" onclick="showPage('pencegahan')">Berikutnya &rarr;</button>
+    </div>
+  </section>
+
+  <!-- ================= PENCEGAHAN KONFLIK SOSIAL ================= -->
+  <section id="pencegahan" class="page">
+    <div class="breadcrumb">Beranda / Pencegahan Konflik Sosial</div>
+    <div class="page-title-wrap"><h1 class="page-title">Pencegahan Konflik Sosial</h1></div>
+    <p style="color:var(--muted);font-size:14px;margin-top:-8px;">Klik salah satu sub materi di bawah untuk menampilkan isinya. Materi akan muncul di bawah daftar tombol ini, tanpa berpindah halaman.</p>
+
+    <div class="topic-cards">
+      <button class="topic-card" style="--c:#0e7c66" data-panel="pk-apaitu" onclick="selectTopic(this,'pk-apaitu')">
+        <span class="tc-num">1</span>
+        <span class="tc-text"><h4>Apa Itu Pencegahan Konflik Sosial?</h4><p>Pengertian upaya pencegahan konflik.</p></span>
+      </button>
+      <button class="topic-card" style="--c:#2563eb" data-panel="pk-mengapa" onclick="selectTopic(this,'pk-mengapa')">
+        <span class="tc-num">2</span>
+        <span class="tc-text"><h4>Mengapa Konflik Perlu Dicegah?</h4><p>Alasan pentingnya mencegah konflik sejak dini.</p></span>
+      </button>
+      <button class="topic-card" style="--c:#f97316" data-panel="pk-upaya" onclick="selectTopic(this,'pk-upaya')">
+        <span class="tc-num">3</span>
+        <span class="tc-text"><h4>Bagaimana Upaya Pencegahan Konflik Sosial?</h4><p>Langkah-langkah nyata mencegah konflik.</p></span>
+      </button>
+      <button class="topic-card" style="--c:#7c3aed" data-panel="pk-peran" onclick="selectTopic(this,'pk-peran')">
+        <span class="tc-num">4</span>
+        <span class="tc-text"><h4>Peran Masyarakat dalam Mencegah Konflik</h4><p>Peran keluarga, pendidikan, dan masyarakat.</p></span>
+      </button>
+      <button class="topic-card" style="--c:#dc2626" data-panel="pk-langkah" onclick="selectTopic(this,'pk-langkah')">
+        <span class="tc-num">5</span>
+        <span class="tc-text"><h4>Jika Konflik Muncul, Apa yang Harus Dilakukan?</h4><p>Langkah menghadapi tanda-tanda konflik.</p></span>
+      </button>
+    </div>
+
+    <div class="topic-panels">
+      <div class="topic-panel" id="pk-apaitu">
+        <h3>1. Apa Itu Pencegahan Konflik Sosial?</h3>
+        <p>Pencegahan konflik sosial adalah berbagai upaya yang dilakukan untuk mencegah munculnya konflik atau mengurangi potensi berkembangnya suatu konflik di tengah masyarakat.</p>
+        <p>Pencegahan dilakukan dengan mengenali potensi masalah sejak awal, menjaga komunikasi, menghargai perbedaan, serta membangun hubungan yang baik antarindividu dan kelompok.</p>
+        <div class="simple-note"><strong>Sederhananya:</strong> Pencegahan konflik berarti mengambil langkah sejak awal agar perbedaan atau masalah tidak berkembang menjadi konflik yang lebih besar.</div>
+      </div>
+
+      <div class="topic-panel" id="pk-mengapa">
+        <h3>2. Mengapa Konflik Perlu Dicegah?</h3>
+        <p>Konflik dapat mengganggu hubungan sosial dan kehidupan masyarakat. Oleh karena itu, pencegahan penting dilakukan untuk:</p>
+        <ul class="plain">
+          <li>Menjaga ketenteraman dan keamanan lingkungan</li>
+          <li>Mencegah kesalahpahaman berkembang menjadi perselisihan</li>
+          <li>Mempertahankan hubungan baik antarindividu dan kelompok</li>
+          <li>Mengurangi potensi terjadinya tindakan yang merugikan</li>
+          <li>Menjaga kerja sama dalam masyarakat</li>
+          <li>Menciptakan lingkungan yang aman, tertib, dan harmonis</li>
+        </ul>
+      </div>
+
+      <div class="topic-panel" id="pk-upaya">
+        <h3>3. Bagaimana Upaya Pencegahan Konflik Sosial?</h3>
+        <div class="accordion">
+          <button class="accordion-toggle" onclick="toggleAccordion(this)">a. Mengenali Potensi Masalah <span class="plus">+</span></button>
+          <div class="accordion-content">
+            <p>Masyarakat perlu peka terhadap perubahan kondisi di lingkungan sekitar. Perselisihan kecil, ketegangan, atau kesalahpahaman yang terus berulang dapat menjadi tanda bahwa suatu masalah perlu diperhatikan.</p>
+            <p><strong>Contoh:</strong> Mengetahui adanya perselisihan antarwarga dan mendorong komunikasi sebelum masalah berkembang.</p>
+          </div>
+        </div>
+        <div class="accordion">
+          <button class="accordion-toggle" onclick="toggleAccordion(this)">b. Membangun Komunikasi yang Baik <span class="plus">+</span></button>
+          <div class="accordion-content">
+            <p>Komunikasi yang terbuka dapat membantu setiap pihak memahami sudut pandang dan kepentingan pihak lainnya.</p>
+            <p><strong>Contoh:</strong> Membicarakan permasalahan lingkungan melalui pertemuan warga daripada menyelesaikannya melalui pertengkaran.</p>
+          </div>
+        </div>
+        <div class="accordion">
+          <button class="accordion-toggle" onclick="toggleAccordion(this)">c. Menghargai Perbedaan <span class="plus">+</span></button>
+          <div class="accordion-content">
+            <p>Perbedaan pendapat, latar belakang, kebiasaan, dan kepentingan merupakan bagian dari kehidupan masyarakat. Sikap saling menghargai dapat membantu mengurangi potensi perselisihan. Berbeda pendapat tidak berarti harus bermusuhan.</p>
+          </div>
+        </div>
+        <div class="accordion">
+          <button class="accordion-toggle" onclick="toggleAccordion(this)">d. Bijak dalam Menerima dan Menyebarkan Informasi <span class="plus">+</span></button>
+          <div class="accordion-content">
+            <p>Informasi yang belum terverifikasi dapat menimbulkan kesalahpahaman dan keresahan. Sebelum menyebarkan informasi:</p>
+            <p><strong>Baca &rarr; Periksa sumber &rarr; Bandingkan informasi &rarr; Pastikan kebenaran &rarr; Baru bagikan jika diperlukan.</strong></p>
+          </div>
+        </div>
+        <div class="accordion">
+          <button class="accordion-toggle" onclick="toggleAccordion(this)">e. Menghindari Provokasi <span class="plus">+</span></button>
+          <div class="accordion-content">
+            <p>Provokasi dapat memperbesar ketegangan yang sudah ada. Masyarakat perlu menghindari:</p>
+            <ul><li>Menyebarkan informasi yang belum terbukti</li><li>Mengajak orang lain untuk memusuhi pihak tertentu</li><li>Menggunakan kata-kata yang dapat memperkeruh keadaan</li><li>Menyebarkan konten yang dapat memicu perselisihan</li></ul>
+          </div>
+        </div>
+        <div class="accordion">
+          <button class="accordion-toggle" onclick="toggleAccordion(this)">f. Mengendalikan Emosi <span class="plus">+</span></button>
+          <div class="accordion-content">
+            <p>Ketika menghadapi perbedaan atau perselisihan, seseorang perlu menghindari tindakan yang dilakukan secara terburu-buru atau emosional. Memberikan waktu untuk menenangkan diri dapat membantu seseorang mempertimbangkan masalah secara lebih objektif.</p>
+          </div>
+        </div>
+        <div class="accordion">
+          <button class="accordion-toggle" onclick="toggleAccordion(this)">g. Mengutamakan Musyawarah <span class="plus">+</span></button>
+          <div class="accordion-content">
+            <p>Permasalahan dapat dibicarakan bersama untuk menemukan solusi yang dapat diterima oleh pihak-pihak yang terlibat. Musyawarah dapat menjadi ruang untuk:</p>
+            <ul><li>Menyampaikan pendapat</li><li>Mendengarkan pihak lain</li><li>Mencari titik temu</li><li>Menyepakati solusi bersama</li></ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic-panel" id="pk-peran">
+        <h3>4. Bagaimana Peran Masyarakat dalam Mencegah Konflik?</h3>
+        <p>Pencegahan konflik bukan hanya tanggung jawab pemerintah atau lembaga tertentu. Masyarakat juga memiliki peran dalam menjaga kondisi lingkungan.</p>
+        <div class="subgroup">
+          <h4>Di Lingkungan Keluarga</h4>
+          <ul class="plain"><li>Membangun komunikasi yang terbuka</li><li>Mengajarkan sikap menghargai perbedaan</li><li>Menyelesaikan masalah melalui pembicaraan</li></ul>
+        </div>
+        <div class="subgroup">
+          <h4>Di Lingkungan Pendidikan</h4>
+          <ul class="plain"><li>Menghargai perbedaan pendapat</li><li>Tidak melakukan perundungan</li><li>Menyelesaikan perselisihan secara damai</li><li>Tidak menyebarkan informasi yang belum terbukti</li></ul>
+        </div>
+        <div class="subgroup">
+          <h4>Di Lingkungan Masyarakat</h4>
+          <ul class="plain"><li>Menjaga komunikasi dengan warga</li><li>Mengikuti kegiatan sosial</li><li>Menghargai perbedaan</li><li>Tidak mudah terprovokasi</li></ul>
+        </div>
+      </div>
+
+      <div class="topic-panel" id="pk-langkah">
+        <h3>5. Jika Konflik Mulai Muncul, Apa yang Harus Dilakukan?</h3>
+        <p>Jika tanda-tanda konflik mulai terlihat, masyarakat dapat melakukan langkah berikut:</p>
+        <div class="list-block"><h4>1. Kenali masalah</h4><p>Cari tahu apa yang menjadi sumber permasalahan.</p></div>
+        <div class="list-block"><h4>2. Jangan memperkeruh keadaan</h4><p>Hindari provokasi dan penyebaran informasi yang belum jelas.</p></div>
+        <div class="list-block"><h4>3. Jaga komunikasi</h4><p>Berikan ruang bagi pihak yang terlibat untuk menyampaikan pendapat.</p></div>
+        <div class="list-block"><h4>4. Cari solusi bersama</h4><p>Utamakan dialog dan musyawarah.</p></div>
+        <div class="list-block"><h4>5. Libatkan pihak yang tepat</h4><p>Jika permasalahan tidak dapat diselesaikan secara langsung atau berpotensi mengganggu ketenteraman masyarakat, sampaikan kepada pihak yang berwenang sesuai dengan kondisi yang terjadi.</p></div>
+      </div>
+    </div>
+
+    <div class="section-block kuis-block" id="pk-kuis">
+      <h3>Kuis Singkat</h3>
+      <div class="mini-quiz" id="mq-pk"></div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn secondary" onclick="showPage('konflik')">&larr; Sebelumnya</button>
+      <span class="spacer"></span>
+      <button class="btn" onclick="showPage('kuis')">Lanjut ke Kuis &rarr;</button>
+    </div>
+  </section>
+
+  <!-- ================= KUIS UTAMA ================= -->
+  <section id="kuis" class="page">
+    <div class="breadcrumb">Beranda / Kuis</div>
+    <div class="page-title-wrap"><h1 class="page-title">Kuis KDPK</h1></div>
+    <div class="quiz-box">
+
+      <div id="kuisIntro">
+        <p style="color:var(--muted);font-size:14.5px;">Kuis ini terdiri dari 20 pertanyaan seputar kewaspadaan dini, konflik sosial, dan pencegahannya. Silakan masukkan nama Anda untuk memulai.</p>
+        <input type="text" id="namaPeserta" placeholder="Tulis nama Anda di sini">
+        <br>
+        <button class="btn orange" onclick="mulaiKuis()">Mulai Kuis</button>
+      </div>
+
+      <div id="kuisJalan" style="display:none;">
+        <div class="progress-bar"><div class="progress-bar-fill" id="progressFill"></div></div>
+        <div class="progress-label" id="progressLabel"></div>
+        <div class="q-text" id="qText"></div>
+        <div id="qOptions"></div>
+        <div class="q-feedback" id="qFeedback"></div>
+        <div class="quiz-controls">
+          <button class="btn" id="nextBtn" style="display:none;" onclick="soalBerikutnya()">Lanjut &rarr;</button>
+        </div>
+      </div>
+
+      <div id="kuisHasil" style="display:none;">
+        <div class="score-card">
+          <div class="score-label">Hasil Kuis untuk</div>
+          <h2 id="namaHasil" style="margin:2px 0 12px;color:var(--primary-dark);"></h2>
+          <div class="score-num" id="skorAngka">0/100</div>
+        </div>
+        <div class="result-buttons">
+          <button class="btn orange" onclick="ulangiKuis()">Ulangi Kuis</button>
+          <button class="btn secondary" onclick="showPage('beranda')">Baca Materi Lagi</button>
+        </div>
+        <h3 style="color:var(--primary-dark);font-size:16px;margin-top:26px;">Ulasan Jawaban</h3>
+        <div id="reviewList"></div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>KDPK — Kewaspadaan Dini &amp; Pencegahan Konflik &middot; Materi edukasi kewaspadaan dini dan pencegahan konflik sosial</footer>
+
+<script>
+/* ======================= NAVIGATION ANTAR HALAMAN ======================= */
+function showPage(id){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+  closeAllDropdowns();
+  window.scrollTo({top:0,behavior:'instant'});
+}
+function goTo(pageId, panelId){
+  showPage(pageId);
+  setTimeout(function(){
+    var btn = document.querySelector('#'+pageId+' [data-panel="'+panelId+'"]');
+    if(btn){
+      selectTopic(btn, panelId);
+    } else {
+      var el = document.getElementById(panelId);
+      if(el){ el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  }, 60);
+}
+function toggleDropdown(key){
+  var dd = document.getElementById('dd-'+key);
+  var isOpen = dd.classList.contains('open');
+  closeAllDropdowns();
+  if(!isOpen){ dd.classList.add('open'); }
+}
+function closeAllDropdowns(){
+  document.querySelectorAll('.dropdown').forEach(function(d){d.classList.remove('open');});
+}
+document.addEventListener('click', function(e){
+  if(!e.target.closest('.menu-item')){ closeAllDropdowns(); }
+});
+
+/* ======================= NAVIGASI SUB MATERI (dalam satu halaman) ======================= */
+function selectTopic(cardBtn, panelId){
+  var cardsRow = cardBtn.closest('.topic-cards');
+  var panelsWrap = cardsRow.nextElementSibling;
+  cardsRow.querySelectorAll('.topic-card').forEach(function(c){ c.classList.remove('active'); });
+  panelsWrap.querySelectorAll('.topic-panel').forEach(function(p){ p.classList.remove('active'); });
+  cardBtn.classList.add('active');
+  var panelEl = document.getElementById(panelId);
+  if(panelEl){
+    panelEl.classList.add('active');
+    panelEl.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+}
+
+/* ======================= ACCORDION ======================= */
+function toggleAccordion(btn){
+  var wrap = btn.parentElement;
+  var content = wrap.querySelector('.accordion-content');
+  var plus = btn.querySelector('.plus');
+  var open = content.classList.toggle('open');
+  wrap.classList.toggle('expanded', open);
+  plus.innerHTML = open ? '&minus;' : '+';
+}
+
+/* ======================= KUIS SINGKAT (satu kuis di akhir tiap materi) ======================= */
+var miniQuizData = {
+  'mq-kd': {
+    case: 'Di grup WhatsApp warga, seseorang mengirim pesan bahwa akan terjadi keributan antara dua kelompok pemuda di lingkungan tersebut malam hari. Pesan tersebut tidak mencantumkan sumber yang jelas. Beberapa warga mulai merasa khawatir dan ingin segera menyebarkan pesan tersebut ke grup lain.',
+    question: 'Apa yang sebaiknya dilakukan?',
+    options: [
+      {k:'A', t:'Langsung meneruskan pesan agar semua warga waspada.'},
+      {k:'B', t:'Memeriksa sumber dan kebenaran informasi terlebih dahulu.'},
+      {k:'C', t:'Mengajak warga untuk mendatangi kelompok yang disebut dalam pesan.'},
+      {k:'D', t:'Menambahkan informasi lain agar warga semakin berhati-hati.'}
+    ],
+    correct:'B',
+    feedback:'Informasi yang belum diketahui kebenarannya perlu diperiksa terlebih dahulu. Kewaspadaan dini dilakukan dengan memperhatikan kondisi secara objektif dan tidak langsung mengambil kesimpulan.'
+  },
+  'mq-ks': {
+    case: 'Dua kelompok warga memiliki pendapat berbeda mengenai pelaksanaan suatu kegiatan di lingkungan. Perbedaan tersebut semakin memanas karena masing-masing kelompok merasa kepentingannya tidak diperhatikan. Akibatnya, hubungan antarkelompok menjadi kurang baik.',
+    question: 'Apa bentuk konflik sosial yang terjadi dalam kasus tersebut?',
+    options: [
+      {k:'A', t:'Konflik antarindividu'},
+      {k:'B', t:'Konflik individu dengan kelompok'},
+      {k:'C', t:'Konflik antarkelompok'},
+      {k:'D', t:'Konflik dalam keluarga'}
+    ],
+    correct:'C',
+    feedback:'Konflik antarkelompok terjadi antara dua kelompok atau lebih karena adanya perbedaan kepentingan, tujuan, atau pandangan.'
+  },
+  'mq-pk': {
+    case: 'Dalam rapat warga, terdapat perbedaan pendapat mengenai jadwal kegiatan kerja bakti. Beberapa warga mulai berbicara dengan nada tinggi karena masing-masing ingin usulannya diterima.',
+    question: 'Apa tindakan yang tepat untuk mencegah perbedaan tersebut berkembang menjadi konflik?',
+    options: [
+      {k:'A', t:'Menghentikan rapat dan membiarkan masalah tanpa penyelesaian.'},
+      {k:'B', t:'Meminta salah satu pihak mengalah tanpa mendengarkan pendapatnya.'},
+      {k:'C', t:'Memberikan kesempatan kepada setiap pihak untuk menyampaikan pendapat dan mencari solusi bersama.'},
+      {k:'D', t:'Membicarakan permasalahan tersebut dengan warga lain setelah rapat.'}
+    ],
+    correct:'C',
+    feedback:'Musyawarah dapat digunakan untuk menyampaikan pendapat, mendengarkan pihak lain, mencari titik temu, dan menyepakati solusi bersama.'
+  }
+};
+
+function renderMiniQuiz(id){
+  var data = miniQuizData[id];
+  var box = document.getElementById(id);
+  var html = '<div class="case">'+data.case+'</div><div class="question">'+data.question+'</div>';
+  data.options.forEach(function(opt){
+    html += '<button class="mq-option" data-key="'+opt.k+'" onclick="jawabMiniQuiz(\''+id+'\',\''+opt.k+'\',this)">'+opt.k+'. '+opt.t+'</button>';
+  });
+  html += '<div class="mq-feedback" id="fb-'+id+'"></div>';
+  box.innerHTML = html;
+}
+function jawabMiniQuiz(id, key, btn){
+  var data = miniQuizData[id];
+  var box = document.getElementById(id);
+  var options = box.querySelectorAll('.mq-option');
+  options.forEach(function(o){
+    o.onclick = null;
+    if(o.getAttribute('data-key') === data.correct){ o.classList.add('correct'); }
+    else if(o === btn && key !== data.correct){ o.classList.add('wrong'); }
+  });
+  var fb = document.getElementById('fb-'+id);
+  var benar = (key === data.correct);
+  fb.className = 'mq-feedback show ' + (benar ? 'ok' : 'no');
+  fb.innerHTML = '<strong>'+(benar ? 'Jawaban Benar!' : 'Jawaban Kurang Tepat.')+'</strong> Jawaban yang benar: <strong>'+data.correct+'</strong>. '+data.feedback;
+}
+Object.keys(miniQuizData).forEach(renderMiniQuiz);
+
+/* ======================= KUIS UTAMA (20 SOAL) ======================= */
+var quizQuestions = [
+  {q:'Warga Blok A memasang portal di lahan parkir bersama tanpa berdiskusi dengan Blok B. Warga Blok B tersinggung dan mengancam membongkar portal itu. Langkah yang tepat agar tidak berkembang jadi konflik adalah...',
+   o:{A:'Pengurus RW memfasilitasi pertemuan kedua blok untuk musyawarah',B:'Membiarkan Blok B membongkar portal',C:'Membiarkan kedua blok menyelesaikan sendiri',D:'Blok A tetap mempertahankan portal tanpa penjelasan'},
+   c:'A', f:'Musyawarah yang difasilitasi pihak netral mencegah perselisihan sepihak berkembang jadi konflik antarkelompok.'},
+  {q:'Dua kelompok suporter saling melontarkan yel-yel provokatif saat nonton bareng, setelah sebelumnya saling ejek di media sosial. Langkah pencegahan yang tepat sebelum acara dimulai adalah...',
+   o:{A:'Panitia menonton dari jauh tanpa turun tangan',B:'Menunggu sampai terjadi keributan',C:'Menghadirkan petugas keamanan dan menegaskan aturan tertib sejak awal',D:'Melarang salah satu kelompok hadir'},
+   c:'C', f:'Kewaspadaan dini berarti antisipasi sejak awal, bukan menunggu konflik terjadi.'},
+  {q:'Seorang anggota karang taruna menolak keras keputusan bersama soal anggaran acara 17 Agustus dan bertindak sendiri tanpa koordinasi. Ini contoh bentuk konflik...',
+   o:{A:'Konflik antarindividu',B:'Konflik antarkelompok',C:'Konflik dalam masyarakat',D:'Konflik individu dengan kelompok'},
+   c:'D', f:'Terjadi ketika tindakan seorang individu bertentangan dengan kepentingan kelompoknya.'},
+  {q:'Setelah insiden pencurian di kompleks, beredar kabar bahwa pelakunya berasal dari daerah tertentu, dan sebagian warga mulai bersikap curiga berlebihan pada warga pendatang dari daerah itu. Ini contoh penyebab konflik sosial berupa...',
+   o:{A:'Prasangka dan provokasi',B:'Komunikasi yang kurang baik',C:'Perbedaan kepentingan',D:'Perbedaan nilai dan pandangan'},
+   c:'A', f:'Prasangka terhadap kelompok tertentu dapat meningkatkan ketegangan dan memperbesar konflik.'},
+  {q:'Jika tanda-tanda konflik mulai terlihat di lingkungan, langkah pertama yang sebaiknya dilakukan adalah...',
+   o:{A:'Mencari tahu apa yang menjadi sumber permasalahan',B:'Langsung melibatkan pihak berwenang tanpa mengecek permasalahan',C:'Menyebarkan informasi ke banyak orang agar cepat viral',D:'Membiarkan masalah selesai dengan sendirinya'},
+   c:'A', f:'Langkah pertama adalah mengenali masalah, yaitu mencari tahu sumber permasalahannya.'},
+  {q:'Berikut ini yang BUKAN manfaat kewaspadaan dini adalah...',
+   o:{A:'Mencegah kesalahpahaman berkembang menjadi konflik',B:'Mendorong penyelesaian masalah secara damai',C:'Membangun komunikasi antarmasyarakat',D:'Membenarkan tindakan main hakim sendiri'},
+   c:'D', f:'Kewaspadaan dini mendorong penyelesaian damai, bukan tindakan main hakim sendiri.'},
+  {q:'Manakah yang termasuk kondisi "penyebaran informasi yang belum terverifikasi"?',
+   o:{A:'Pengumuman resmi dari kelurahan',B:'Pesan berantai yang mengajak warga melakukan tindakan tertentu tanpa sumber jelas',C:'Undangan rapat RT yang ditempel di papan pengumuman',D:'Berita dari media massa terverifikasi'},
+   c:'B', f:'Pesan tanpa sumber jelas yang mengajak tindakan tertentu perlu diwaspadai.'},
+  {q:'Manakah faktor penyebab konflik sosial yang berkaitan dengan "prasangka dan provokasi"?',
+   o:{A:'Perbedaan nilai dan kebiasaan yang tidak dikelola dengan baik',B:'Tindakan menghasut atau bersikap curiga berlebihan terhadap kelompok tertentu sehingga ketegangan meningkat',C:'Kurangnya informasi yang lengkap',D:'Perbedaan tujuan antarpihak'},
+   c:'B', f:'Prasangka dan tindakan provokatif meningkatkan ketegangan dan memperbesar konflik.'},
+  {q:'Konflik yang berlangsung terus-menerus dapat menimbulkan rasa takut, cemas, dan tekanan. Ini termasuk dampak konflik sosial dari sisi...',
+   o:{A:'Dampak ekonomi',B:'Dampak persatuan',C:'Dampak sosial',D:'Dampak psikologis'},
+   c:'D', f:'Rasa takut, cemas, dan tekanan akibat konflik berkepanjangan termasuk dampak psikologis.'},
+  {q:'Mengapa mengendalikan emosi penting dalam mencegah konflik berkembang lebih besar?',
+   o:{A:'Agar konflik cepat selesai tanpa musyawarah',B:'Agar pihak lain merasa takut',C:'Agar seseorang dapat mempertimbangkan masalah secara lebih objektif dan tidak bertindak terburu-buru',D:'Agar masalah bisa langsung dilupakan tanpa dibahas'},
+   c:'C', f:'Mengendalikan emosi membantu seseorang menenangkan diri dan berpikir lebih objektif.'},
+  {q:'Sengketa penggunaan balai warga antara kelompok pengajian dan kelompok arisan sudah berlangsung dua bulan dan tidak kunjung selesai lewat pembicaraan RT, bahkan mulai memancing ketegangan lebih luas. Langkah yang tepat selanjutnya adalah...',
+   o:{A:'Menyampaikan masalah ke pihak kelurahan/pihak berwenang agar difasilitasi',B:'Membiarkan siapa yang datang lebih dulu yang berhak pakai',C:'Membiarkan kedua kelompok terus berselisih',D:'Melarang salah satu kelompok memakai balai selamanya'},
+   c:'A', f:'Bila tak selesai secara langsung dan berpotensi mengganggu ketenteraman, libatkan pihak berwenang.'},
+  {q:'Saat dua tetangga bertengkar keras karena parkir motor menghalangi jalan, salah satu warga lain justru merekam dan mengunggahnya dengan judul provokatif ke media sosial. Sikap yang seharusnya dilakukan warga tersebut adalah...',
+   o:{A:'Terus mengunggah agar viral',B:'Menambahkan komentar yang memihak salah satu pihak',C:'Tidak menyebarkan konten yang dapat memicu perselisihan lebih luas',D:'Membagikan ke banyak grup agar cepat diketahui'},
+   c:'C', f:'Konten yang dapat memicu perselisihan sebaiknya tidak disebarluaskan.'},
+  {q:'Kapan suatu permasalahan sebaiknya disampaikan kepada pihak yang berwenang?',
+   o:{A:'Setiap kali ada perbedaan pendapat kecil',B:'Ketika masalah tidak dapat diselesaikan secara langsung atau berpotensi mengganggu ketenteraman masyarakat',C:'Hanya jika ada yang meminta bantuan media',D:'Tidak pernah, karena masyarakat harus menyelesaikan sendiri'},
+   c:'B', f:'Pihak berwenang dilibatkan saat masalah tak selesai langsung atau mengganggu ketenteraman.'},
+  {q:'Dalam sebuah forum diskusi warga soal rencana pembangunan jalan, beberapa peserta mulai saling menyalahkan dan enggan mendengarkan pihak lain. Upaya yang paling sesuai prinsip pencegahan konflik adalah...',
+   o:{A:'Menghentikan diskusi karena dianggap tidak produktif',B:'Membiarkan pihak yang paling keras suaranya menang',C:'Mengutamakan musyawarah dengan memberi ruang bagi semua pihak menyampaikan pendapat dan mencari titik temu',D:'Meminta salah satu pihak diam tanpa penjelasan'},
+   c:'C', f:'Musyawarah memberi ruang menyampaikan pendapat, mendengarkan, dan mencari titik temu.'},
+  {q:'Sebelum menyebarkan sebuah informasi, urutan langkah bijak yang tepat adalah...',
+   o:{A:'Bagikan \u2192 baca \u2192 periksa sumber',B:'Baca \u2192 periksa sumber \u2192 bandingkan informasi \u2192 pastikan kebenaran \u2192 bagikan jika perlu',C:'Periksa sumber \u2192 bagikan \u2192 bandingkan',D:'Bandingkan \u2192 bagikan \u2192 baca'},
+   c:'B', f:'Urutan bijak: baca, periksa sumber, bandingkan, pastikan kebenaran, baru bagikan bila perlu.'},
+  {q:'Manakah yang termasuk upaya menghindari provokasi dalam mencegah konflik sosial?',
+   o:{A:'Menyebarkan informasi yang belum terbukti agar warga waspada',B:'Mengajak orang lain memusuhi pihak tertentu',C:'Menyebarkan konten yang dapat memicu perselisihan agar cepat viral',D:'Tidak menggunakan kata-kata yang dapat memperkeruh keadaan dan tidak menyebarkan konten yang memicu perselisihan'},
+   c:'D', f:'Menghindari provokasi berarti menjaga kata-kata dan tidak menyebar konten pemicu perselisihan.'},
+  {q:'Setelah perselisihan panjang soal batas tanah, dua keluarga yang dulunya akrab kini saling menghindar dan tidak lagi saling membantu dalam kegiatan warga. Ini termasuk dampak konflik dari sisi...',
+   o:{A:'Dampak sosial',B:'Dampak terhadap ketenteraman',C:'Dampak terhadap aktivitas masyarakat',D:'Dampak psikologis'},
+   c:'A', f:'Hubungan renggang dan berkurangnya rasa saling percaya termasuk dampak sosial.'},
+  {q:'Dua kelompok warga berselisih karena merasa kepentingannya tidak diperhatikan dalam suatu kegiatan lingkungan. Bentuk konflik sosial yang terjadi adalah...',
+   o:{A:'Konflik antarindividu',B:'Konflik individu dengan kelompok',C:'Konflik antarkelompok',D:'Konflik dalam keluarga'},
+   c:'C', f:'Terjadi antara dua kelompok atau lebih karena perbedaan kepentingan, tujuan, atau pandangan.'},
+  {q:'Apa tujuan utama dari pencegahan konflik sosial?',
+   o:{A:'Menghilangkan seluruh perbedaan pendapat di masyarakat',B:'Mengambil langkah sejak awal agar perbedaan atau masalah tidak berkembang menjadi konflik besar',C:'Menunda penyelesaian masalah hingga membesar',D:'Menyerahkan semua masalah kepada aparat tanpa musyawarah'},
+   c:'B', f:'Pencegahan berarti mengambil langkah sejak awal agar masalah tidak membesar.'},
+  {q:'Manakah pernyataan yang paling tepat menggambarkan hubungan antara kewaspadaan dini, konflik sosial, dan pencegahannya?',
+   o:{A:'Kewaspadaan dini digunakan untuk mengenali potensi masalah, konflik sosial adalah bentuk masalah yang dapat muncul, dan pencegahan adalah langkah agar potensi masalah tidak berkembang menjadi konflik',B:'Ketiganya tidak memiliki keterkaitan sama sekali',C:'Pencegahan hanya dilakukan setelah konflik besar terjadi',D:'Kewaspadaan dini hanya berlaku untuk aparat pemerintah, bukan masyarakat umum'},
+   c:'A', f:'Ketiga konsep saling berkaitan sebagai satu rangkaian: kenali, cegah, jangan sampai jadi konflik.'}
+];
+
+var namaPeserta = '';
+var currentIndex = 0;
+var jawabanPeserta = [];
+
+function mulaiKuis(){
+  var input = document.getElementById('namaPeserta');
+  namaPeserta = input.value.trim() || 'Peserta';
+  currentIndex = 0;
+  jawabanPeserta = [];
+  document.getElementById('kuisIntro').style.display = 'none';
+  document.getElementById('kuisHasil').style.display = 'none';
+  document.getElementById('kuisJalan').style.display = 'block';
+  tampilkanSoal();
+}
+
+function tampilkanSoal(){
+  var total = quizQuestions.length;
+  var data = quizQuestions[currentIndex];
+  document.getElementById('progressFill').style.width = ((currentIndex)/total*100)+'%';
+  document.getElementById('progressLabel').textContent = 'Soal '+(currentIndex+1)+' dari '+total;
+  document.getElementById('qText').textContent = (currentIndex+1)+'. '+data.q;
+  var optsBox = document.getElementById('qOptions');
+  optsBox.innerHTML = '';
+  ['A','B','C','D'].forEach(function(key){
+    var b = document.createElement('button');
+    b.className = 'q-option';
+    b.textContent = key+'. '+data.o[key];
+    b.onclick = function(){ jawabSoal(key, b); };
+    optsBox.appendChild(b);
+  });
+  var fb = document.getElementById('qFeedback');
+  fb.className = 'q-feedback';
+  fb.innerHTML = '';
+  document.getElementById('nextBtn').style.display = 'none';
+}
+
+function jawabSoal(key, btn){
+  var data = quizQuestions[currentIndex];
+  var options = document.querySelectorAll('#qOptions .q-option');
+  options.forEach(function(o){ o.disabled = true; o.onclick = null; });
+  var benar = (key === data.c);
+  options.forEach(function(o){
+    var letter = o.textContent.charAt(0);
+    if(letter === data.c){ o.classList.add('correct'); }
+    else if(letter === key && !benar){ o.classList.add('wrong'); }
+  });
+  jawabanPeserta.push({q:data.q, chosen:key, correct:data.c, benar:benar, feedback:data.f, o:data.o});
+
+  var fb = document.getElementById('qFeedback');
+  fb.className = 'q-feedback show ' + (benar ? 'ok' : 'no');
+  fb.innerHTML = '<div class="correct-answer">'+(benar ? 'Jawaban Benar!' : 'Jawaban Kurang Tepat.')+' Jawaban yang benar: '+data.c+'. '+data.o[data.c]+'</div>'+data.f;
+
+  var nextBtn = document.getElementById('nextBtn');
+  nextBtn.style.display = 'inline-block';
+  nextBtn.textContent = (currentIndex === quizQuestions.length-1) ? 'Lihat Hasil' : 'Lanjut \u2192';
+}
+
+function soalBerikutnya(){
+  if(currentIndex < quizQuestions.length-1){
+    currentIndex++;
+    tampilkanSoal();
+  } else {
+    tampilkanHasil();
+  }
+}
+
+function tampilkanHasil(){
+  document.getElementById('kuisJalan').style.display = 'none';
+  document.getElementById('kuisHasil').style.display = 'block';
+  var skor = jawabanPeserta.filter(function(j){return j.benar;}).length;
+  var skor100 = skor*5;
+  document.getElementById('namaHasil').textContent = namaPeserta;
+  document.getElementById('skorAngka').textContent = skor100+'/100';
+
+  /* Kirim hasil ke Google Spreadsheet lewat Apps Script.
+     Hanya berjalan jika halaman ini dijalankan sebagai Web App Apps Script
+     (google.script.run tidak tersedia saat dibuka sebagai artifact biasa). */
+  if (typeof google !== 'undefined' && google.script && google.script.run) {
+    google.script.run.simpanHasilKuis(namaPeserta, skor100, skor, quizQuestions.length);
+  }
+
+  var reviewBox = document.getElementById('reviewList');
+  reviewBox.innerHTML = '';
+  jawabanPeserta.forEach(function(j, idx){
+    var div = document.createElement('div');
+    div.className = 'review-item';
+    var chosenText = j.o[j.chosen] || '(tidak dijawab)';
+    var correctText = j.o[j.correct];
+    div.innerHTML =
+      '<div class="rq">'+(idx+1)+'. '+j.q+'</div>'+
+      '<div class="ra '+(j.benar?'correct':'wrong')+'">Jawaban Anda: '+j.chosen+'. '+chosenText+'</div>'+
+      (j.benar ? '' : '<div class="ra correct">Jawaban Benar: '+j.correct+'. '+correctText+'</div>')+
+      '<div class="rf">'+j.feedback+'</div>';
+    reviewBox.appendChild(div);
+  });
+}
+
+function ulangiKuis(){
+  document.getElementById('kuisHasil').style.display = 'none';
+  document.getElementById('kuisIntro').style.display = 'block';
+  document.getElementById('namaPeserta').value = '';
+}
+</script>
+</body>
+</html>
